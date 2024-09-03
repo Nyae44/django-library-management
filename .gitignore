@@ -1,0 +1,8 @@
+# Backups 
+*.bak 
+
+# Databases 
+*.sqlite3 
+
+# Environment variables
+*.env
