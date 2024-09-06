@@ -1,0 +1,11 @@
+{% extends "main/base.html" %}
+{% block content %}
+    <h2>{{view.action}}Update Book</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% form.as_p%}
+        <button type="submit">Save</button>
+    </form>
+    <a href="{% url 'book_create' %}"></a>
+
+{% endblock content %}
