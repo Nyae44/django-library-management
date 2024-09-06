@@ -14,8 +14,8 @@ urlpatterns = [
     path('members/<int:pk>/delete/', MemberDeleteView.as_view(), name='member_delete'),
     
     # Transactions
-    path('issuebook/', IssueBookView.as_view(), name='issue_book'),
-    path('returnbook/', ReturnBookView.as_view(), name='return_book'),
+    path('transaction/issue', IssueBookView.as_view(), name='issue_book'),
+    path('transaction/return', ReturnBookView.as_view(), name='return_book'),
     
     
 ]

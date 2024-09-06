@@ -1,0 +1,10 @@
+{% extends 'main/base.html' %}
+{% block content %}
+    <h2>{{view.action}} Update Member</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">Save</button>
+    </form>
+    <a href="{% url "member_list" %}">Back to member list</a>
+{% endblock content %}
