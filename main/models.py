@@ -16,6 +16,7 @@ class Member(models.Model):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     email = models.EmailField(max_length=50, unique=True, blank=True, null=True)
     rental_debt = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    creation_date = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.name

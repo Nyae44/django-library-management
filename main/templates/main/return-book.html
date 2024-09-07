@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+    <h2>Return a Book</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="form-group">
+            <label for="return_date">Return Date:</label>
+            <input type="date" name="return_date" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Return Book</button>
+    </form>
+
+    <a href="{% url 'books' %}" class="btn btn-secondary">Back to Books</a>
+{% endblock %}

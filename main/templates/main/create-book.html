@@ -3,7 +3,7 @@
     <h2>{{view.action}}Create Book</h2>
     <form method="post">
         {% csrf_token %}
-        {% form.as_p%}
+        {{ form.as_p}}
         <button type="submit">Save</button>
     </form>
     <a href="{% url 'book_create' %}"></a>
