@@ -1,27 +1,78 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, FormView, View
 from .models import Book, Member,Transaction
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import RegistrationForm
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 # Create your views here.
+
+class RegisterView(CreateView):
+    form_class = RegistrationForm
+    template_name = 'main/register.html'
+    success_url = reverse_lazy('login') 
+    
+class LoginView(FormView):
+    template_name = 'main/login.html'
+    form_class = AuthenticationForm
+    success_url = reverse_lazy('dashboard')
+
+    def form_valid(self, form):
+        # Get the username and password from the form data
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+
+        # Authenticate the user
+        user = authenticate(self.request, username=username, password=password)
+
+        if user is not None:
+            login(self.request, user)
+            return redirect(self.success_url)
+        else:
+            form.add_error(None, 'Invalid username or password')
+            return self.form_invalid(form)
+        
+@method_decorator(login_required(login_url='login'),name='dispatch')
+class LogoutView(View):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect('login')
+    
+    
+class WelcomePageView(TemplateView):
+    template_name = 'main/index.html'
+
 # Book views
-class BookListView(ListView):
+@method_decorator(login_required(login_url='login'),name='dispatch')
+class DashboardView(ListView):
     model = Book
-    template_name = 'main/booklist.html'
+    template_name = 'main/dashboard.html'
     context_object_name = 'books'
     
+@method_decorator(login_required(login_url='login'),name='dispatch')
+class BookListView(ListView):
+    model = Book
+    template_name = 'main/view-book.html'
+    context_object_name = 'books'
+    
+@method_decorator(login_required(login_url='login'),name='dispatch')
 class BookCreateView(CreateView):
     model = Book
-    template_name = 'main/book_form.html'
+    template_name = 'main/create-book.html'
     fields = ['title', 'author', 'quantity', 'rental_fee']
     success_url = reverse_lazy('books')
-    
+ 
+@method_decorator(login_required(login_url='login'),name='dispatch')   
 class BookUpdateView(UpdateView):
     model = Book
-    template_name = 'main/book_form.html'
+    template_name = 'main/update-book.html'
     fields = ['title', 'author', 'quantity', 'rental_fee']
     success_url = reverse_lazy('books')
     
+@method_decorator(login_required(login_url='login'),name='dispatch')
 class BookDeleteView(DeleteView):
     model = Book
     template_name = 'main/delete_book.html'
@@ -29,23 +80,27 @@ class BookDeleteView(DeleteView):
     
 # Member views
 
+@method_decorator(login_required(login_url='login'),name='dispatch')
 class MemberListView(ListView):
     model = Member
-    template_name = 'main/memberlist.html'
+    template_name = 'main/view-member.html'
     context_object_name = 'members'
     
+@method_decorator(login_required(login_url='login'),name='dispatch')
 class MemberCreateView(CreateView):
     model = Member
-    template_name = 'main/member_form.html'
+    template_name = 'main/create-member.html'
     fields = ['name', 'phone_number','email', 'rental_debt']
     success_url = reverse_lazy('members')
 
+@method_decorator(login_required(login_url='login'),name='dispatch')
 class MemberUpdateView(UpdateView):
     model = Member
-    template_name = 'main/member_form.html'
+    template_name = 'main/update-member.html'
     fields = ['name', 'phone_number', 'email', 'rental_debt']
     success_url = reverse_lazy('members')
     
+@method_decorator(login_required(login_url='login'),name='dispatch')   
 class MemberDeleteView(DeleteView):
     model = Member
     template_name = 'main/delete_member.html'
@@ -54,14 +109,14 @@ class MemberDeleteView(DeleteView):
     
 # Transactions
 # Issue books 
-
+@method_decorator(login_required(login_url='login'),name='dispatch')
 class IssueBookView(CreateView):
     model = Transaction
-    template_name = 'main/transaction_form.html'
+    template_name = 'main/issue-book.html'
     fields = ['book', 'member']
     
     def form_valid(self, form):
-        transaction = form.save(commmit=False)
+        transaction = form.save(commit=False)
         if transaction.book.quantity > 0:
             transaction.book.quantity -= 1
             transaction.book.save()
@@ -73,9 +128,10 @@ class IssueBookView(CreateView):
         return reverse_lazy('books')
     
 # Return books   
+@method_decorator(login_required(login_url='login'),name='dispatch')
 class ReturnBookView(CreateView):
     model = Transaction
-    template_name = 'main/return_transaction_form.html'
+    template_name = 'main/return-book.html'
     fields = ['book', 'member']
     
     def form_valid(self, form):
@@ -105,3 +161,6 @@ class ReturnBookView(CreateView):
         
     def get_success_url(self):
         return reverse_lazy('books')
+    
+    
+

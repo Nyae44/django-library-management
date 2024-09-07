@@ -1,0 +1,35 @@
+{% extends "main/base.html" %}
+
+{% block content%} 
+    <h5>Welcome to the dashboard page,{{user}}!</h5>
+    <hr>
+    <a class="btn btn-outline-primary btn-sm" href="{% url "book_create" %}">Add a new book</a>
+    <hr>
+    <table class="table table-light table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">TITLE</th>
+                <th scope="col">AUTHOR</th>
+                <th scope="col">QUANTITY</th>
+                <th scope="col">RENTAL FEE</th>
+
+                <th scope="col">View</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% if books %}
+            {% for book in books %}
+            <tr>
+                <td>{{book.id}}</td>
+                <td>{{book.title}}</td>
+                <td>{{book.author}}</td>
+                <td>{{book.quantity}}</td>
+                <td>{{book.rental_fee}}</td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+        </tbody>
+
+    </table>
+{% endblock %}

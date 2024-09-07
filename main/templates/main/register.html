@@ -1,0 +1,41 @@
+{% extends 'main/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="container bg-light shadow-md p-5 form-layout">
+        <h3>Create a new account</h3>
+        <hr>
+        <br>
+
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
+
+            {{ form.username|as_crispy_field }}
+
+            <br>
+
+            {{ form.email|as_crispy_field }}
+
+            <br>
+
+            {{ form.password1|as_crispy_field }}
+
+            <br>
+
+            {{ form.password2|as_crispy_field }}
+
+            <br>
+
+            <button type="submit" class="btn btn-primary w-100 btn-block p-3">
+                Register &nbsp; <i class="fa fa-user-plus" aria-hidden="true"></i>
+            </button>
+        </form>
+        <br>
+
+        <div class="text-center">
+            <p>Already have an account?</p> <a href="{% url 'login' %}">Login</a>
+        </div>
+    </div>
+    <br>
+{% endblock content %}
