@@ -6,6 +6,7 @@ class Book(models.Model):
     title = models.CharField(max_length=200, blank=True, null=True)
     author = models.CharField(max_length=200, blank=True, null=True)
     quantity = models.IntegerField(default=0, blank=True, null=True)
+    total_quantity = models.IntegerField(default=0)
     rental_fee = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     
     def __str__(self):
@@ -25,9 +26,11 @@ class Transaction(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     issue_date = models.DateField(auto_now_add=True)
-    return_date = models.DateField(null=True, blank=True)
+    return_date = models.DateField(blank=True, null=True)
+    actual_return_date = models.DateField(blank=True, null=True)
     fees_charged = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    penalty = models.DecimalField(max_digits=5,decimal_places=2,default=0.0)
     
     def __str__(self):
-        return f"{self.book.title} - {self.member.name}"
+        return f"{self.book.title} issued to {self.member.name}"
     

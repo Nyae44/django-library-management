@@ -26,6 +26,8 @@
                 <td>{{book.author}}</td>
                 <td>{{book.quantity}}</td>
                 <td>{{book.rental_fee}}</td>
+
+                <td><a href="{% url 'book_update' book.id %}">Click here</a></td>
             </tr>
             {% endfor %}
         {% endif %}
