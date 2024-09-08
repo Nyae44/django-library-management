@@ -1,11 +1,28 @@
 {% extends "main/base.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
-    <h2>{{view.action}}Update Book</h2>
+    <body>
+        <div class="container bg-light shadow-md form-layout">
+            <h3>{{view.action}}Update book details</h3>
+            <h6>Edit book details</h6>
+            <hr>
+            <br>
+            <form method="post">
+                {% csrf_token %}
+                {{form|crispy}}
+                <button type="submit">Save</button>
+            </form>
+            <a href="{% url "dashboard" %}">Return</a>
+        </div>
+    </body>   
+{% endblock content %}
+
+{% comment %} 
+ <h2>{{view.action}}Update Book</h2>s
     <form method="post">
         {% csrf_token %}
-        {% form.as_p%}
+        {{form|crispy}}
         <button type="submit">Save</button>
     </form>
-    <a href="{% url 'dashboard' %}"></a>
-
-{% endblock content %}
+    <a href="{% url 'dashboard' %}">Return</a>
+{% endcomment %}

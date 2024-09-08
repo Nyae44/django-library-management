@@ -1,11 +1,26 @@
 {% extends "main/base.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
-    <h2>{{view.action}}Create Book</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p}}
-        <button type="submit">Save</button>
-    </form>
-    <a href="{% url 'book_create' %}"></a>
-
+    <body>
+        <div class="container bg-light shadow-md p-5 form-layout">
+            <h3>{{view.action}}Add a new Book</h3>
+            <h6>Add the required details for the book</h6>
+            <hr>
+            <br>
+            <form method="post" autocomplete="off">
+                {% csrf_token %}
+                {{form|crispy}}
+                <br>
+                <button type="submit" class="btn btn-primary w-100 btn-block p-2">Add new book</button>
+            </form>
+        </div>
+        <a href="{% url "books" %}"><button class="btn btn-primary w-100 btn-block p-2">Return</button></a>
+    </body>
 {% endblock content %}
+{% comment %} <h2>{{view.action}}Create Book</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <button type="submit">Save</button>
+</form>
+<a href="{% url 'book_create' %}"></a> {% endcomment %}

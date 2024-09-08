@@ -1,13 +1,35 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
-    <h2>Book List</h2>
+    <div class="card">
+        <strong>
+            {{book.title}}
+        </strong>
+        <div class="card-body">
+            <p> <strong>ID: </strong>{{book.id}}</p>
+
+            <p> <strong>Title: </strong>{{book.title}}</p>
+
+            <p> <strong>Author: </strong>{{book.author}}</p>
+
+            <p> <strong>Quantity: </strong>{{book.quantity}}</p>
+
+            <p><strong>Total Quantity: </strong>{{book.total_quantity}}</p>
+
+            <p> <strong>Rental Fee: </strong>{{book.rental_fee}}</p>
+
+        </div>
+    </div>
+  
+{% endblock content %}
+{% comment %} 
+  <h2>Book List</h2>
     <ul>
         {% for book in books %}
-            <li>{{ book.title }} by {{ book.author }} ({{ book.quantity }} available) - Rent: {{ book.rent_fee }} KES</li>
+            <li>{{ book.title }} by {{ book.author }} ({{ book.quantity }} available) - Rent: {{ book.rental_fee }} KES</li>
             <a href="{% url 'book_update' book.id %}">Edit</a> | 
             <a href="{% url 'book_delete' book.id %}">Delete</a>
         {% endfor %}
     </ul>
     <a href="{% url 'book_create' %}">Add a new book</a>
-{% endblock content %}
+{% endcomment %}

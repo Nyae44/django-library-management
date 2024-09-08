@@ -7,6 +7,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.utils import timezone
+from datetime import timedelta
 
 # Create your views here.
 
@@ -78,6 +80,7 @@ class BookDeleteView(DeleteView):
     template_name = 'main/delete_book.html'
     success_url = reverse_lazy('books')
     
+    
 # Member views
 
 @method_decorator(login_required(login_url='login'),name='dispatch')
@@ -120,6 +123,11 @@ class IssueBookView(CreateView):
         if transaction.book.quantity > 0:
             transaction.book.quantity -= 1
             transaction.book.save()
+            
+            # Calculate rental_fees based on rental duration
+            rental_duration = (transaction.return_date - transaction.issue_date).days
+            transaction.rental_fees_charged = rental_duration * transaction.book.rental_fee # daily rental fee
+            transaction.save()           
             return super().form_valid(form)
         else:
             form.add_error(None, 'This book is not available')
@@ -138,12 +146,29 @@ class ReturnBookView(CreateView):
         transaction = Transaction.objects.filter(
             book = form.cleaned_data['book'],
             member = form.cleaned_data['member'],
-            return_date__isnull=True  
+            return_date__isnull=True,
+            actual_return_date__isnull=True
         ).first()
         
         if transaction:
-            transaction.return_date = self.request.POST.get('return_date')
+            # Actual return date
+            transaction.actual_return_date = timezone.now().date()
+            
+            
+            #transaction.return_date = self.request.POST.get('return_date')
+            
+            # rental fees 
             transaction.fees_charged = form.cleaned_data['book'].rental_fee
+            
+            # Check if book is returned late
+            if transaction.actual_return_date > transaction.return_date:
+                days_late = (transaction.actual_return_date - transaction.return_date).days
+                penalty_per_day = 20
+                transaction.penalty = days_late * penalty_per_day
+                transaction.member.rental_debt +=transaction.penalty
+                
+                
+            # Add rental fees to member's debt
             transaction.member.rental_debt += transaction.fees_charged
             
             if transaction.member.rental_debt > 500:
@@ -156,7 +181,7 @@ class ReturnBookView(CreateView):
             return super().form_valid(form)
         
         else:
-            form.add_error(None, 'This book has not been issued to any member')
+            form.add_error(None, 'This book has not been issued to this member or has already been returned')
             return self.form_invalid(form)
         
     def get_success_url(self):

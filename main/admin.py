@@ -4,7 +4,7 @@ from .models import Book, Member, Transaction
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ['title', 'author', 'quantity', 'rental_fee']
+    list_display = ['title', 'author', 'quantity','total_quantity' ,'rental_fee']
     
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
