@@ -1,11 +1,11 @@
 from django.urls import path
-from .views import BookListView, BookCreateView, BookUpdateView, BookDeleteView, MemberListView,MemberCreateView, MemberUpdateView, MemberDeleteView, IssueBookView, ReturnBookView, WelcomePageView, DashboardView, LoginView, RegisterView,LogoutView
+from .views import BookDetailView, BookCreateView, BookUpdateView, BookDeleteView, MemberListView,MemberCreateView, MemberUpdateView, MemberDeleteView, IssueBookView, ReturnBookView, WelcomePageView, DashboardView, LoginView, RegisterView,LogoutView
 urlpatterns = [
     
     path('',WelcomePageView.as_view(),name='welcome'),
     path('dashboard/', DashboardView.as_view(), name='dashboard' ),
     # Books
-    path('books/', BookListView.as_view(), name='books'),
+    path('book/<int:pk>', BookDetailView.as_view(), name='book_detail'),
     path('books/add/', BookCreateView.as_view(), name='book_create'),
     path('books/<int:pk>/',BookUpdateView.as_view(), name='book_update'),
     path('books/<int:pk>/',BookDeleteView.as_view(), name='book_delete'),
