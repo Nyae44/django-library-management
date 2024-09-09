@@ -20,16 +20,11 @@
 
         </div>
     </div>
+    <br>
+    <a href="{% url 'dashboard' %}" class="btn btn-primary">Return</a>
+    &nbsp;
+    <a href="{% url 'book_update' book.id %}" class="btn btn-info">Update</a>
+    &nbsp;
+    <a href="{% url 'book_delete' book.id %}" class="btn btn-danger">Delete</a>
   
 {% endblock content %}
-{% comment %} 
-  <h2>Book List</h2>
-    <ul>
-        {% for book in books %}
-            <li>{{ book.title }} by {{ book.author }} ({{ book.quantity }} available) - Rent: {{ book.rental_fee }} KES</li>
-            <a href="{% url 'book_update' book.id %}">Edit</a> | 
-            <a href="{% url 'book_delete' book.id %}">Delete</a>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'book_create' %}">Add a new book</a>
-{% endcomment %}

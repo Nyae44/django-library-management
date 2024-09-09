@@ -1,14 +1,14 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, FormView, View
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView,TemplateView, FormView, View
 from .models import Book, Member,Transaction
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import RegistrationForm
+from .forms import RegistrationForm, TransactionForm, ReturnBookForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils import timezone
-from datetime import timedelta
+from datetime import datetime
 
 # Create your views here.
 
@@ -55,10 +55,10 @@ class DashboardView(ListView):
     context_object_name = 'books'
     
 @method_decorator(login_required(login_url='login'),name='dispatch')
-class BookListView(ListView):
+class BookDetailView(DetailView):
     model = Book
     template_name = 'main/view-book.html'
-    context_object_name = 'books'
+    context_object_name = 'book'
     
 @method_decorator(login_required(login_url='login'),name='dispatch')
 class BookCreateView(CreateView):
@@ -71,8 +71,10 @@ class BookCreateView(CreateView):
 class BookUpdateView(UpdateView):
     model = Book
     template_name = 'main/update-book.html'
-    fields = ['title', 'author', 'quantity', 'rental_fee']
-    success_url = reverse_lazy('books')
+    fields = ['title', 'author', 'quantity', 'total_quantity','rental_fee']
+    
+    def get_success_url(self):
+        return reverse_lazy('book_detail', kwargs={'pk':self.object.pk})
     
 @method_decorator(login_required(login_url='login'),name='dispatch')
 class BookDeleteView(DeleteView):
@@ -112,35 +114,67 @@ class MemberDeleteView(DeleteView):
     
 # Transactions
 # Issue books 
-@method_decorator(login_required(login_url='login'),name='dispatch')
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class IssueBookView(CreateView):
     model = Transaction
     template_name = 'main/issue-book.html'
-    fields = ['book', 'member']
-    
+    form_class = TransactionForm
+    # fields = ['book', 'member', 'return_date']  
+
     def form_valid(self, form):
         transaction = form.save(commit=False)
+        transaction.issue_date = timezone.now()  # Set issue_date automatically
+
+        # Convert issue_date to date
+        if isinstance(transaction.issue_date, datetime):
+            issue_date = transaction.issue_date.date()
+        else:
+            issue_date = transaction.issue_date
+
         if transaction.book.quantity > 0:
+            # Reduce the quantity of the book
             transaction.book.quantity -= 1
             transaction.book.save()
+
+            # Validate return_date and calculate rental fees
+            if transaction.return_date:
+                # Convert return_date to date if it's a datetime object
+                if isinstance(transaction.return_date, datetime):
+                    return_date = transaction.return_date.date()
+                else:
+                    return_date = transaction.return_date
+                
+                rental_duration = (return_date - issue_date).days
+                
+                if rental_duration >= 0:
+                    transaction.rental_fees_charged = rental_duration * transaction.book.rental_fee
+                else:
+                    # Return date is earlier than issue date
+                    form.add_error('return_date', 'Return date cannot be earlier than issue date.')
+                    return self.form_invalid(form)
+            else:
+                # Return date is missing
+                form.add_error('return_date', 'Return date is required.')
+                return self.form_invalid(form)
             
-            # Calculate rental_fees based on rental duration
-            rental_duration = (transaction.return_date - transaction.issue_date).days
-            transaction.rental_fees_charged = rental_duration * transaction.book.rental_fee # daily rental fee
-            transaction.save()           
+            transaction.save()
             return super().form_valid(form)
         else:
-            form.add_error(None, 'This book is not available')
+            # Book is not available
+            form.add_error('book', 'This book is not available.')
             return self.form_invalid(form)
+
     def get_success_url(self):
-        return reverse_lazy('books')
+        return reverse_lazy('dashboard')
+
     
 # Return books   
 @method_decorator(login_required(login_url='login'),name='dispatch')
 class ReturnBookView(CreateView):
     model = Transaction
     template_name = 'main/return-book.html'
-    fields = ['book', 'member']
+    form_class = ReturnBookForm
+    # fields = ['book', 'member']
     
     def form_valid(self, form):
         transaction = Transaction.objects.filter(
@@ -185,7 +219,7 @@ class ReturnBookView(CreateView):
             return self.form_invalid(form)
         
     def get_success_url(self):
-        return reverse_lazy('books')
+        return reverse_lazy('dashboard')
     
     
 
