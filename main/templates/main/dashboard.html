@@ -11,7 +11,8 @@
                 <th scope="col">ID</th>
                 <th scope="col">TITLE</th>
                 <th scope="col">AUTHOR</th>
-                <th scope="col">QUANTITY</th>
+                <th scope="col">QUANTITY REMAINING</th>
+                <th scope="col">TOTAL QUANTITY</th>
                 <th scope="col">RENTAL FEE</th>
 
                 <th scope="col">View</th>
@@ -25,6 +26,7 @@
                 <td>{{book.title}}</td>
                 <td>{{book.author}}</td>
                 <td>{{book.quantity}}</td>
+                <td>{{book.total_quantity}}</td>
                 <td>{{book.rental_fee}}</td>
 
                 <td><a href="{% url 'book_detail' book.id %}">Click here</a></td>
