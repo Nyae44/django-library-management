@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import BookDetailView, BookCreateView, BookUpdateView, BookDeleteView, MemberListView,MemberCreateView, MemberUpdateView, MemberDeleteView, IssueBookView, ReturnBookView, WelcomePageView, DashboardView, LoginView, RegisterView,LogoutView
+from .views import BookDetailView, BookCreateView, BookUpdateView, BookDeleteView, MemberListView,MemberCreateView,MemberDetailView, MemberUpdateView, MemberDeleteView, IssueBookView, ReturnBookView, WelcomePageView, DashboardView, LoginView, RegisterView,LogoutView
 urlpatterns = [
     
     path('',WelcomePageView.as_view(),name='welcome'),
@@ -12,6 +12,7 @@ urlpatterns = [
     
     # Members
     path('members/',MemberListView.as_view(), name='members'),
+    path('member/<int:pk>/', MemberDetailView.as_view(), name='member_detail'),
     path('members/add/', MemberCreateView.as_view(), name='member_create'),
     path('members/<int:pk>/', MemberUpdateView.as_view(), name='member_update'),
     path('members/<int:pk>/', MemberDeleteView.as_view(), name='member_delete'),

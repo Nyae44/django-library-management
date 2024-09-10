@@ -1,0 +1,40 @@
+{% extends "main/base.html" %}
+
+{% block content%} 
+    <h5>Welcome to the members list page</h5>
+    <h6>View and Edit individual member details</h6>
+    <hr>
+    <a class="btn btn-outline-primary btn-sm" href="{% url "member_create" %}">Add a new member</a>
+    <hr>
+    <table class="table table-light table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">NAME</th>
+                <th scope="col">PHONE NUMBER</th>
+                <th scope="col">EMAIL</th>
+                <th scope="col">RENTAL DEBT</th>
+                <th scope="col">DATE JOINED</th>
+
+                <th scope="col">View</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% if members %}
+            {% for member in members %}
+            <tr>
+                <td>{{member.id}}</td>
+                <td>{{member.name}}</td>
+                <td>{{member.phone_number}}</td>
+                <td>{{member.email}}</td>
+                <td>{{member.rental_debt}}</td>
+                <td>{{member.creation_date}}</td>
+
+                <td><a href="{% url 'member_detail' member.id %}">Click here</a></td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+        </tbody>
+
+    </table>
+{% endblock %}

@@ -11,16 +11,9 @@
                 {% csrf_token %}
                 {{form|crispy}}
                 <br>
-                <button type="submit" class="btn btn-primary w-100 btn-block p-2">Add new book</button>
+                <button type="submit" class="btn btn-primary w-100 btn-block p-2">Add new member</button>
             </form>
         </div>
-        <a href="{% url "books" %}"><button class="btn btn-primary w-100 btn-block p-2">Return</button></a>
+        <a href="{% url 'dashboard' %}"><button class="btn btn-primary w-100 btn-block p-2">Return</button></a>
     </body>
 {% endblock content %}
-{% comment %} <h2>{{view.action}}Create Book</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p}}
-    <button type="submit">Save</button>
-</form>
-<a href="{% url 'book_create' %}"></a> {% endcomment %}

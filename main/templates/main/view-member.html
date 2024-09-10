@@ -1,13 +1,25 @@
 {% extends "main/base.html" %}
 {% block content %}
-    <h2>Member list</h2>
-    <ul>
-        {% for member in members%}
-            <li>{{member.name}} - {{member.email}} (Debt: {{member.rental_debt}})</li>
-            <a href="{% url "member_update" member.id %}">Edit</a> |
-            <a href="{% url "member_delete" member.id %}">Delete</a>
-        {% endfor %}
-    </ul>
-    <a href="{% url "member_create" %}">Add a new member</a>
+   <div class="card">
+        <strong>
+            {{member.name}}
+        </strong>
+        <div class="card-body">
+            <p><strong>NAME: </strong>{{member.name}}</p>
 
+            <p><strong>PHONE NUMBER: </strong>{{member.phone_number}}</p>
+
+            <p><strong>EMAIL: </strong>{{member.email}}</p>
+
+            <p><strong>RENTAL DEBT: </strong>{{member.rental_debt}}</p>
+
+            <p><strong>DATE JOINED: </strong>{{member.creation_date}}</p>
+        </div>
+   </div>
+   <br>
+   <a href="{% url "members" %}" class="btn btn-primary">Return</a>
+   &nbsp;
+   <a href="{% url "member_update" member.id %}" class="btn btn-info">Edit</a>
+   &nbsp;
+   <a href="{% url "member_delete" member.id %}" class="btn btn-danger">Delete</a>
 {% endblock content %}

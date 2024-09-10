@@ -1,10 +1,19 @@
-{% extends 'main/base.html' %}
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
-    <h2>{{view.action}} Create Member</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Save</button>
-    </form>
-    <a href="{% url "members" %}">Back to member list</a>
+    <body>
+        <div class="container bg-light shadow-md p-5 form-layout">
+            <h3>{{view.action}}Add a new Member</h3>
+            <h6>Add the required details for the member</h6>
+            <hr>
+            <br>
+            <form method="post" autocomplete="off">
+                {% csrf_token %}
+                {{form|crispy}}
+                <br>
+                <button type="submit" class="btn btn-primary w-100 btn-block p-2">Add new book</button>
+            </form>
+        </div>
+        <a href="{% url 'dashboard' %}"><button class="btn btn-primary w-100 btn-block p-2">Return</button></a>
+    </body>
 {% endblock content %}

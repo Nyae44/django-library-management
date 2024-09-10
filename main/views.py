@@ -64,8 +64,8 @@ class BookDetailView(DetailView):
 class BookCreateView(CreateView):
     model = Book
     template_name = 'main/create-book.html'
-    fields = ['title', 'author', 'quantity', 'rental_fee']
-    success_url = reverse_lazy('books')
+    fields = ['title', 'author', 'quantity', 'total_quantity','rental_fee']
+    success_url = reverse_lazy('dashboard')
  
 @method_decorator(login_required(login_url='login'),name='dispatch')   
 class BookUpdateView(UpdateView):
@@ -80,7 +80,7 @@ class BookUpdateView(UpdateView):
 class BookDeleteView(DeleteView):
     model = Book
     template_name = 'main/delete_book.html'
-    success_url = reverse_lazy('books')
+    success_url = reverse_lazy('dashboard')
     
     
 # Member views
@@ -88,7 +88,7 @@ class BookDeleteView(DeleteView):
 @method_decorator(login_required(login_url='login'),name='dispatch')
 class MemberListView(ListView):
     model = Member
-    template_name = 'main/view-member.html'
+    template_name = 'main/members-list.html'
     context_object_name = 'members'
     
 @method_decorator(login_required(login_url='login'),name='dispatch')
@@ -103,7 +103,15 @@ class MemberUpdateView(UpdateView):
     model = Member
     template_name = 'main/update-member.html'
     fields = ['name', 'phone_number', 'email', 'rental_debt']
-    success_url = reverse_lazy('members')
+    
+    def get_success_url(self):
+        return reverse_lazy('member_detail', kwargs={'pk':self.object.pk})
+    
+@method_decorator(login_required(login_url='login'),name='dispatch')
+class MemberDetailView(DetailView):
+    model = Member
+    template_name = 'main/view-member.html'
+    context_object_name = 'member'
     
 @method_decorator(login_required(login_url='login'),name='dispatch')   
 class MemberDeleteView(DeleteView):
@@ -138,7 +146,7 @@ class IssueBookView(CreateView):
 
             # Validate return_date and calculate rental fees
             if transaction.return_date:
-                # Convert return_date to date if it's a datetime object
+                
                 if isinstance(transaction.return_date, datetime):
                     return_date = transaction.return_date.date()
                 else:

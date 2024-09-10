@@ -1,13 +1,13 @@
 {% extends "main/base.html" %}
-
+{% load crispy_forms_tags%}
 {% block content %}
     <h2>Return a Book</h2>
 
-    <form method="post">
+    <form method="post" class="form-layout">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form|crispy}}
         <button type="submit" class="btn btn-primary">Return Book</button>
     </form>
 
-    <a href="{% url 'books' %}" class="btn btn-secondary">Back to Books</a>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Books</a>
 {% endblock %}
