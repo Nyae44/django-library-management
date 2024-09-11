@@ -1,3 +1,5 @@
+from django.forms import BaseModelForm
+from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView,TemplateView, FormView, View
@@ -54,6 +56,9 @@ class DashboardView(ListView):
     template_name = 'main/dashboard.html'
     context_object_name = 'books'
     
+    def get_queryset(self):
+        return Book.objects.filter(user=self.request.user)
+    
 @method_decorator(login_required(login_url='login'),name='dispatch')
 class BookDetailView(DetailView):
     model = Book
@@ -66,12 +71,20 @@ class BookCreateView(CreateView):
     template_name = 'main/create-book.html'
     fields = ['title', 'author', 'quantity', 'total_quantity','rental_fee']
     success_url = reverse_lazy('dashboard')
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+        
  
 @method_decorator(login_required(login_url='login'),name='dispatch')   
 class BookUpdateView(UpdateView):
     model = Book
     template_name = 'main/update-book.html'
     fields = ['title', 'author', 'quantity', 'total_quantity','rental_fee']
+    
+    def get_queryset(self):
+        return Book.objects.filter(user=self.request.user)
     
     def get_success_url(self):
         return reverse_lazy('book_detail', kwargs={'pk':self.object.pk})
@@ -118,6 +131,7 @@ class MemberDeleteView(DeleteView):
     model = Member
     template_name = 'main/delete_member.html'
     success_url = reverse_lazy('members')
+    
     
     
 # Transactions
@@ -182,7 +196,7 @@ class ReturnBookView(CreateView):
     model = Transaction
     template_name = 'main/return-book.html'
     form_class = ReturnBookForm
-    # fields = ['book', 'member']
+   
     
     def form_valid(self, form):
         transaction = Transaction.objects.filter(
