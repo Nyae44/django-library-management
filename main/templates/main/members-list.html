@@ -1,10 +1,9 @@
 {% extends "main/base.html" %}
 
 {% block content%} 
-    <h5>Welcome to the members list page</h5>
-    <h6>View and Edit individual member details</h6>
+    <h5>View and Edit individual member details</h5>
     <hr>
-    <a class="btn btn-outline-primary btn-sm" href="{% url "member_create" %}">Add a new member</a>
+    <a class="btn btn-outline-primary btn-sm" href="{% url "member_create" %}">Add a new member &nbsp; <i class="fa fa-user" aria-hidden="true"></i></a>
     <hr>
     <table class="table table-light table-hover">
         <thead class="table-dark">
