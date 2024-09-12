@@ -104,6 +104,9 @@ class MemberListView(ListView):
     template_name = 'main/members-list.html'
     context_object_name = 'members'
     
+    def get_queryset(self):
+        return Member.objects.all()
+    
 @method_decorator(login_required(login_url='login'),name='dispatch')
 class MemberCreateView(CreateView):
     model = Member
@@ -141,7 +144,6 @@ class IssueBookView(CreateView):
     model = Transaction
     template_name = 'main/issue-book.html'
     form_class = TransactionForm
-    # fields = ['book', 'member', 'return_date']  
 
     def form_valid(self, form):
         transaction = form.save(commit=False)
@@ -170,6 +172,10 @@ class IssueBookView(CreateView):
                 
                 if rental_duration >= 0:
                     transaction.rental_fees_charged = rental_duration * transaction.book.rental_fee
+                    
+                    # Add the rental fee to the member's rental debt
+                    transaction.member.rental_debt += transaction.rental_fees_charged
+                    transaction.member.save()  # Save the updated rental debt
                 else:
                     # Return date is earlier than issue date
                     form.add_error('return_date', 'Return date cannot be earlier than issue date.')
@@ -189,6 +195,7 @@ class IssueBookView(CreateView):
     def get_success_url(self):
         return reverse_lazy('dashboard')
 
+
     
 # Return books   
 @method_decorator(login_required(login_url='login'),name='dispatch')
@@ -202,7 +209,7 @@ class ReturnBookView(CreateView):
         transaction = Transaction.objects.filter(
             book = form.cleaned_data['book'],
             member = form.cleaned_data['member'],
-            return_date__isnull=True,
+            # return_date__isnull=True,
             actual_return_date__isnull=True
         ).first()
         
