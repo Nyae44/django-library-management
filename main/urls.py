@@ -15,7 +15,7 @@ urlpatterns = [
     path('member/<int:pk>/', MemberDetailView.as_view(), name='member_detail'),
     path('members/add/', MemberCreateView.as_view(), name='member_create'),
     path('members/<int:pk>/', MemberUpdateView.as_view(), name='member_update'),
-    path('members/<int:pk>/', MemberDeleteView.as_view(), name='member_delete'),
+    path('members/<int:pk>/delete/', MemberDeleteView.as_view(), name='member_delete'),
     
     # Transactions
     path('transaction/issue', IssueBookView.as_view(), name='issue_book'),
