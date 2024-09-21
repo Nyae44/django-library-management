@@ -204,51 +204,39 @@ class ReturnBookView(CreateView):
     template_name = 'main/return-book.html'
     form_class = ReturnBookForm
    
-    
     def form_valid(self, form):
         transaction = Transaction.objects.filter(
-            book = form.cleaned_data['book'],
-            member = form.cleaned_data['member'],
-            # return_date__isnull=True,
+            book=form.cleaned_data['book'],
+            member=form.cleaned_data['member'],
             actual_return_date__isnull=True
         ).first()
-        
+
         if transaction:
-            # Actual return date
             transaction.actual_return_date = timezone.now().date()
+            transaction.fees_charged = transaction.book.rental_fee
             
+            # Add fees and penalties to the member's debt
+            transaction.member.add_to_debt(transaction.fees_charged)
             
-            #transaction.return_date = self.request.POST.get('return_date')
-            
-            # rental fees 
-            transaction.fees_charged = form.cleaned_data['book'].rental_fee
-            
-            # Check if book is returned late
             if transaction.actual_return_date > transaction.return_date:
                 days_late = (transaction.actual_return_date - transaction.return_date).days
                 penalty_per_day = 20
                 transaction.penalty = days_late * penalty_per_day
-                transaction.member.rental_debt +=transaction.penalty
-                
-                
-            # Add rental fees to member's debt
-            transaction.member.rental_debt += transaction.fees_charged
+                transaction.member.add_to_debt(transaction.penalty)
             
+            # Check if debt exceeds limit
             if transaction.member.rental_debt > 500:
-                form.add_error(None, 'Member has exceeded the maximum debt limit')
+                form.add_error(None, 'Member has exceeded the maximum debt limit.')
                 return self.form_invalid(form)
-            
+
             transaction.save()
             transaction.book.quantity += 1
             transaction.book.save()
             return super().form_valid(form)
-        
         else:
-            form.add_error(None, 'This book has not been issued to this member or has already been returned')
+            form.add_error(None, 'This book has not been issued to this member or has already been returned.')
             return self.form_invalid(form)
+
         
-    def get_success_url(self):
-        return reverse_lazy('dashboard')
-    
     
 
