@@ -23,6 +23,12 @@ class Member(models.Model):
     def __str__(self):
         return self.name
     
+      
+    def add_to_debt(self, amount):
+        """Add a specified amount to the member's debt."""
+        self.rental_debt += amount
+        self.save()
+    
 class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
