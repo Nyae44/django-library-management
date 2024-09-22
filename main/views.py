@@ -203,6 +203,7 @@ class ReturnBookView(CreateView):
     model = Transaction
     template_name = 'main/return-book.html'
     form_class = ReturnBookForm
+    success_url = reverse_lazy('dashboard')
    
     def form_valid(self, form):
         transaction = Transaction.objects.filter(
