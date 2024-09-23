@@ -155,6 +155,13 @@ class IssueBookView(CreateView):
         else:
             issue_date = transaction.issue_date
 
+        # Check if the member has exceeded or reached the debt limit
+        debt_limit = 500  # Set the debt limit here
+        if transaction.member.rental_debt >= debt_limit:
+            form.add_error(None, 'This member has reached or exceeded the rental debt limit and cannot issue a new book.')
+            return self.form_invalid(form)
+
+        # Check if the book is available
         if transaction.book.quantity > 0:
             # Reduce the quantity of the book
             transaction.book.quantity -= 1
@@ -195,8 +202,6 @@ class IssueBookView(CreateView):
     def get_success_url(self):
         return reverse_lazy('dashboard')
 
-
-    
 # Return books   
 @method_decorator(login_required(login_url='login'),name='dispatch')
 class ReturnBookView(CreateView):
