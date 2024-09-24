@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils import timezone
 from datetime import datetime
+from django.db.models import Q
 
 # Create your views here.
 
@@ -57,6 +58,12 @@ class DashboardView(ListView):
     context_object_name = 'books'
     
     def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Book.objects.filter(
+                Q(title__icontains=query) | Q(author__icontains=query), 
+                user=self.request.user
+            )
         return Book.objects.filter(user=self.request.user)
     
 @method_decorator(login_required(login_url='login'),name='dispatch')
@@ -97,16 +104,22 @@ class BookDeleteView(DeleteView):
     
     
 # Member views
-
-@method_decorator(login_required(login_url='login'),name='dispatch')
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class MemberListView(ListView):
     model = Member
     template_name = 'main/members-list.html'
     context_object_name = 'members'
     
     def get_queryset(self):
+        # Get the search query from the GET request
+        query = self.request.GET.get('q', '')
+        # Filter members based on the query
+        if query:
+            return Member.objects.filter(
+                Q(name__icontains=query) | Q(phone_number__icontains=query)
+            )
         return Member.objects.all()
-    
+
 @method_decorator(login_required(login_url='login'),name='dispatch')
 class MemberCreateView(CreateView):
     model = Member
@@ -158,7 +171,7 @@ class IssueBookView(CreateView):
         # Check if the member has exceeded or reached the debt limit
         debt_limit = 500  # Set the debt limit here
         if transaction.member.rental_debt >= debt_limit:
-            form.add_error(None, 'This member has reached or exceeded the rental debt limit and cannot issue a new book.')
+            form.add_error(None, 'This member has reached or exceeded the rental debt limit and cannot be issued a new book.')
             return self.form_invalid(form)
 
         # Check if the book is available
