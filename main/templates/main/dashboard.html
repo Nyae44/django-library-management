@@ -1,9 +1,29 @@
 {% extends "main/base.html" %}
 
-{% block content%} 
-    <h5>Welcome to the dashboard page,{{user}}!</h5>
+{% block content %} 
+    <h5>Welcome to the dashboard page, {{ user }}!</h5>
     <hr>
-    <a class="btn btn-outline-primary btn-sm" href="{% url "book_create" %}">Add a new book &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+
+    <!-- Row containing Add New Book Button and Circular Search Form -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Add New Book Button -->
+        <a class="btn btn-outline-primary btn-sm" href="{% url "book_create" %}">
+            Add a new book &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
+        </a>
+
+        <!-- Circular Search Form with Dark Outline, Hover Effect, and Icon -->
+        <form action="" method="GET" class="form-layout">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control search-input" placeholder="Search by title or author" value="{{ request.GET.q }}">
+                <div class="input-group-append">
+                    <button class="btn btn-dark search-btn" type="submit">
+                        <i class="fa fa-search"></i> <!-- Search Icon -->
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <hr>
     <table class="table table-light table-hover">
         <thead class="table-dark">
@@ -14,7 +34,6 @@
                 <th scope="col">QUANTITY REMAINING</th>
                 <th scope="col">TOTAL QUANTITY</th>
                 <th scope="col">RENTAL FEE</th>
-
                 <th scope="col">View</th>
             </tr>
         </thead>
@@ -22,18 +41,20 @@
         {% if books %}
             {% for book in books %}
             <tr>
-                <td>{{book.id}}</td>
-                <td>{{book.title}}</td>
-                <td>{{book.author}}</td>
-                <td>{{book.quantity}}</td>
-                <td>{{book.total_quantity}}</td>
-                <td>{{book.rental_fee}}</td>
-
+                <td>{{ book.id }}</td>
+                <td>{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.quantity }}</td>
+                <td>{{ book.total_quantity }}</td>
+                <td>{{ book.rental_fee }}</td>
                 <td><a href="{% url 'book_detail' book.id %}">Click here</a></td>
             </tr>
             {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="7" class="text-center">No books found.</td>
+            </tr>
         {% endif %}
         </tbody>
-
     </table>
 {% endblock %}

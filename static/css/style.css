@@ -1,4 +1,36 @@
-.form-layout{
-    border-radius: 15px;
-    width: 500px;
+/* General layout styles */
+.form-layout {
+    border-radius: 15px; /* Existing style */
+    width: 500px; /* Existing style */
+}
+
+/* Style for the search input */
+.search-input {
+    border-radius: 50px;
+    border-color: #343a40;
+    background-color: #343a40;
+    color: white;
+}
+
+/* Placeholder color */
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7); /* Lighter placeholder */
+}
+
+/* Style for the search button */
+.search-btn {
+    border-radius: 50px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hover effect on the input */
+.search-input:hover {
+    border-color: #495057; /* Lighter shade of the dark border */
+    background-color: #495057; /* Slightly lighter on hover */
+}
+
+/* Hover effect on the button */
+.search-btn:hover {
+    background-color: #495057;
+    border-color: #495057;
 }
