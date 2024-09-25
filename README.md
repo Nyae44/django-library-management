@@ -82,31 +82,37 @@ To run the project locally:
 
 - Add, update, or delete books with stock tracking.
 
-![Books Management](screenshots/book_management.png)
+![Add Book](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot6_add_book.png?raw=true)
+![Update Book](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot7_updatebook.png?raw=true)
+![Delete Book](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot8_deletebook.png?raw=true)
+
 
 ### 2. Members Management
 
 - View, add, or update member details. Track their outstanding rental debt.
 
-![Members Management](screenshots/member_management.png)
+![Member Management](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot3_members.png?raw=true)
+
 
 ### 3. Issuing a Book
 
 - Issue a book to a member, with the option to manage due dates and rental fees.
 
-![Issue a Book](screenshots/issue_book.png)
+![Books Management](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot4_issuebook.png?raw=true)
+
 
 ### 4. Returning a Book & Rental Fee Calculation
 
 - Return a book, automatically calculating and applying rental fees.
 
-![Return a Book](screenshots/return_book.png)
+![Books Management](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot5_returnbook.png?raw=true)
+
 
 ### 5. Search for Books
 
 - Search books by title or author.
+![Books Management](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot9_searchbook.png?raw=true)
 
-![Search Books](screenshots/search_books.png)
 
 ## License
 
