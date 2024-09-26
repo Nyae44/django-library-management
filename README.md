@@ -5,6 +5,7 @@ A web application for a local library to manage books, members, and transactions
 ## Table of Contents
 - [Features](#features)
 - [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
 - [Setup](#setup)
 - [Screenshots](#screenshots)
 - [License](#license)
@@ -36,6 +37,12 @@ The Library Management System includes the following functionalities:
 - **Database**: SQLite (for development), Postgres/MySQL (for production)
 - **Deployment**: Yet to be deployed
 
+## Prerequisites
+
+- **Python 3.8.10**
+- **Django**
+- **Virtual Environment (venv)**
+
 ## Setup
 
 To run the project locally:
@@ -46,33 +53,47 @@ To run the project locally:
     cd django-library-management
     ```
 
-2. **Create a virtual environment**:
+2. **Ensure Python version 3.8.10**:
+    Make sure you have Python 3.8.10 installed. You can check your version with:
+    ```bash
+    python --version
+    ```
+    If you don't have Python 3.8.10 installed, you can install it or use a version manager like `pyenv` to set it up.
+
+3. **Create a virtual environment**:
     ```bash
     python3 -m venv venv
     source venv/bin/activate  # On Windows: venv\Scripts\activate
     ```
 
-3. **Install dependencies**:
+4. **Set environment variables**:
+    Create a `.env` file in the root of the project and add the following:
+    ```bash
+    SECRET_KEY=your-secret-key
+    DEBUG=True  # Or False in production
+    ```
+
+5. **Install dependencies**:
     ```bash
     pip install -r requirements.txt
     ```
 
-4. **Run migrations**:
+6. **Run migrations**:
     ```bash
     python manage.py migrate
     ```
 
-5. **Create a superuser (for the admin panel)**:
+7. **Create a superuser (for the admin panel)**:
     ```bash
     python manage.py createsuperuser
     ```
 
-6. **Run the development server**:
+8. **Run the development server**:
     ```bash
     python manage.py runserver
     ```
 
-7. **Access the application**:
+9. **Access the application**:
     - Go to `http://127.0.0.1:8000` in your browser to view the library management system.
     - Go to `http://127.0.0.1:8000/admin` to access the Django admin panel.
 
@@ -82,8 +103,8 @@ To run the project locally:
 
 - Add, update, or delete books with stock tracking.
 
-![Add Book](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot6_add_book.png?raw=true)
-![Update Book](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot7_updatebook.png?raw=true)
+![Add Book](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot_6_add_book.png?raw=true)
+![Update Book](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot_7_updatebook.png?raw=true)
 ![Delete Book](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot8_deletebook.png?raw=true)
 
 
@@ -98,7 +119,7 @@ To run the project locally:
 
 - Issue a book to a member, with the option to manage due dates and rental fees.
 
-![Books Management](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot4_issuebook.png?raw=true)
+![Books Management](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot_4_issuebook.png?raw=true)
 
 
 ### 4. Returning a Book & Rental Fee Calculation

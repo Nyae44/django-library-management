@@ -2,18 +2,19 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <body>
-        <div class="container bg-light shadow-md form-layout">
-            <h3>{{view.action}}Update book details</h3>
+        <div class="container bg-light shadow-md p-5 form-layout">
+            <h3>{{ view.action }} Update book details</h3>
             <h6>Edit book details</h6>
             <hr>
             <br>
-            <form method="post">
+            <form method="post" autocomplete="off">
                 {% csrf_token %}
-                {{form|crispy}}
-                <button type="submit" class="btn btn-primary">Save</button>
+                {{ form|crispy }}
+                <br>
+                <button type="submit" class="btn btn-primary w-100 btn-block p-2">Save</button>
             </form>
-            <a href="{% url "dashboard" %}" class="btn btn-primary">Return</a>
+            <br>
+            <a href="{% url 'dashboard' %}" class="btn btn-primary w-100 btn-block p-2 mt-2">Return</a>
         </div>
-    </body>   
+    </body>
 {% endblock content %}
-
