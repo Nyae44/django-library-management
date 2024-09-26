@@ -126,7 +126,7 @@ To run the project locally:
 
 - Return a book, automatically calculating and applying rental fees.
 
-![Books Management](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot5_returnbook.png?raw=true)
+![Books Management](https://github.com/Nyae44/django-library-management/blob/master/screenshots/screenshot_5_returnbook.png?raw=true)
 
 
 ### 5. Search for Books
