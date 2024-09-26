@@ -1,13 +1,18 @@
 {% extends "main/base.html" %}
-{% load crispy_forms_tags%}
+{% load crispy_forms_tags %}
 {% block content %}
-    <h2>Return a Book</h2>
-
-    <form method="post" class="form-layout">
-        {% csrf_token %}
-        {{ form|crispy}}
-        <button type="submit" class="btn btn-primary">Return Book</button>
-    </form>
-
-    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Books</a>
+    <body>
+        <div class="container bg-light shadow-md p-5 form-layout">
+            <h2>Return a Book</h2>
+            <hr>
+            <form method="post" autocomplete="off">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <br>
+                <button type="submit" class="btn btn-primary w-100 btn-block p-2">Return Book</button>
+            </form>
+            <br>
+            <a href="{% url 'dashboard' %}" class="btn btn-primary w-100 btn-block p-2 mt-2">Back to Books</a>
+        </div>
+    </body>
 {% endblock %}

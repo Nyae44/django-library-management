@@ -2,14 +2,16 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h2>Issue a Book</h2>
+    <div class="container bg-light shadow-md p-5 form-layout">
+        <h2>Issue a Book</h2>
 
-    <form method="post" class="form-layout">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <input type="date" name"return_date" required>
-        <button type="submit" class="btn btn-primary">Issue Book</button>
-    </form>
+        <form method="post" autocomplete="off">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="date" name="return_date" required class="form-control mb-3">
+            <button type="submit" class="btn btn-primary w-100 btn-block p-2">Issue Book</button>
+        </form>
 
-    <a href="{% url 'dashboard' %}" class="btn btn-primary">Back to Books</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary w-100 btn-block p-2 mt-2">Back to Books</a>
+    </div>
 {% endblock %}
