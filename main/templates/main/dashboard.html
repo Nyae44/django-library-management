@@ -47,7 +47,7 @@
                 <td>{{ book.quantity }}</td>
                 <td>{{ book.total_quantity }}</td>
                 <td>{{ book.rental_fee }}</td>
-                <td><a href="{% url 'book_detail' book.id %}">Click here</a></td>
+                <td><a href="{% url 'book_detail' book.id %}" class="btn btn-success btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
             </tr>
             {% endfor %}
         {% else %}
