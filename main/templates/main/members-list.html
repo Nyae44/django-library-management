@@ -48,7 +48,7 @@
                 <td>{{ member.email }}</td>
                 <td>{{ member.rental_debt|floatformat:2 }}</td>
                 <td>{{ member.creation_date|date:"F j, Y" }}</td>
-                <td><a href="{% url 'member_detail' member.id %}">Click here</a></td>
+                <td><a href="{% url 'member_detail' member.id %}" class="btn btn-success btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
             </tr>
             {% endfor %}
         {% else %}
