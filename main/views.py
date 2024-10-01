@@ -12,6 +12,7 @@ from django.utils.decorators import method_decorator
 from django.utils import timezone
 from datetime import datetime
 from django.db.models import Q
+from django.contrib import messages
 
 # Create your views here.
 
@@ -20,6 +21,13 @@ class RegisterView(CreateView):
     template_name = 'main/register.html'
     success_url = reverse_lazy('login') 
     
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Account created successfully!")
+        return response
+    def form_invalid(self, form):
+        messages.error(self.request, "There was a problem in creating your account! Please try again")
+        return super().form_invalid(form)
 class LoginView(FormView):
     template_name = 'main/login.html'
     form_class = AuthenticationForm
@@ -35,9 +43,11 @@ class LoginView(FormView):
 
         if user is not None:
             login(self.request, user)
+            messages.success(self.request, f"Welcome back, {username}")
             return redirect(self.success_url)
         else:
             form.add_error(None, 'Invalid username or password')
+            messages.error(self.request, "Invalid username or password. Please try again!")
             return self.form_invalid(form)
         
 @method_decorator(login_required(login_url='login'),name='dispatch')
@@ -81,6 +91,7 @@ class BookCreateView(CreateView):
     
     def form_valid(self, form):
         form.instance.user = self.request.user
+        messages.success(self.request, "Book added successfully!")
         return super().form_valid(form)
         
  
@@ -96,11 +107,22 @@ class BookUpdateView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('book_detail', kwargs={'pk':self.object.pk})
     
+    def form_valid(self, form):
+        messages.success(self.request, "Book updated successfully!")
+        return super().form_valid(form)
+    
+        
 @method_decorator(login_required(login_url='login'),name='dispatch')
 class BookDeleteView(DeleteView):
     model = Book
     template_name = 'main/delete_book.html'
     success_url = reverse_lazy('dashboard')
+    
+    def delete(self, request, *args, **kwargs):
+        book = self.get_object()
+        response = super().delete(request, *args, **kwargs)
+        messages.success(self.request, f'{book.title} was deleted successfully!')
+        return response
     
     
 # Member views
@@ -126,6 +148,10 @@ class MemberCreateView(CreateView):
     template_name = 'main/create-member.html'
     fields = ['name', 'phone_number','email', 'rental_debt']
     success_url = reverse_lazy('members')
+    
+    def form_valid(self, form):
+        messages.success(self.request, f"Memmber {form.instance.name} created successfully!")
+        return super().form_valid(form)
 
 @method_decorator(login_required(login_url='login'),name='dispatch')
 class MemberUpdateView(UpdateView):
@@ -135,6 +161,10 @@ class MemberUpdateView(UpdateView):
     
     def get_success_url(self):
         return reverse_lazy('member_detail', kwargs={'pk':self.object.pk})
+    
+    def form_valid(self, form):
+        messages.success(self.request, f"Member {form.instance.name} updated successfully")
+        return super().form_valid(form)
     
 @method_decorator(login_required(login_url='login'),name='dispatch')
 class MemberDetailView(DetailView):
@@ -148,7 +178,10 @@ class MemberDeleteView(DeleteView):
     template_name = 'main/delete_member.html'
     success_url = reverse_lazy('members')
     
-    
+    def member(self, request, *args, **kwargs):
+        member = self.get_object()
+        response = super().delete(request, *args, **kwargs)
+        messages.success(self.request, f"Member {member.name} deleted successfully!")
     
 # Transactions
 # Issue books 
